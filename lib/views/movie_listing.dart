@@ -15,7 +15,9 @@ class MovieListing extends StatelessWidget {
         elevation: 0,
       ),
       drawer: const NavDrawer(),
-      body: const SizedBox.shrink(),
+      body: Container(
+        child: const SizedBox.shrink(),
+      ),
     );
   }
 }
