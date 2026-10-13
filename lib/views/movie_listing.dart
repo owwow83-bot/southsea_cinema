@@ -16,7 +16,38 @@ class MovieListing extends StatelessWidget {
       ),
       drawer: const NavDrawer(),
       body: Container(
-        child: const SizedBox.shrink(),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Interstellar',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            const Text('Runtime: 169 minutes'),
+            const SizedBox(height: 4),
+
+            const Text('Age rating: 12A'),
+            const SizedBox(height: 16),
+
+            const Text(
+              'A team of explorers travels through space searching for a new home for humanity.',
+            ),
+            const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () {
+                print('Add to order button pressed');
+              },
+              child: const Text('Add to order'),
+            ),
+          ],
+        ),
       ),
     );
   }
