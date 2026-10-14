@@ -32,7 +32,8 @@ void main() {
       );
     });
 
-    test('formattedPrice displays whole-pound price with two decimal places', () {
+    test('formattedPrice displays whole-pound price with two decimal places',
+        () {
       const Movie movie = Movie(
         id: 'test-whole',
         title: 'Test Movie',

@@ -35,8 +35,7 @@ void main() {
     test('getMovieById returns matching movie when id exists', () {
       final MovieRepository repository = MovieRepository();
 
-      final Movie? movie =
-          repository.getMovieById('interstellar');
+      final Movie? movie = repository.getMovieById('interstellar');
 
       expect(movie, isNotNull);
       expect(movie?.title, 'Interstellar');
@@ -46,8 +45,7 @@ void main() {
     test('getMovieById returns null when id does not exist', () {
       final MovieRepository repository = MovieRepository();
 
-      final Movie? movie =
-          repository.getMovieById('non-existent');
+      final Movie? movie = repository.getMovieById('non-existent');
 
       expect(movie, isNull);
     });

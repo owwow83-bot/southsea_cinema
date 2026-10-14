@@ -51,7 +51,6 @@ class _MovieListingState extends State<MovieListing> {
               ),
             ),
             const SizedBox(height: 20),
-
             Text(
               widget.movie.title,
               style: const TextStyle(
@@ -60,27 +59,21 @@ class _MovieListingState extends State<MovieListing> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
-
             Text(
               'Age rating: ${widget.movie.ageRating}',
               style: const TextStyle(
                 color: cinemaFontMuted,
               ),
             ),
-
             const SizedBox(height: 6),
-
             Text(
               'Runtime: ${widget.movie.runtime}',
               style: const TextStyle(
                 color: cinemaFontMuted,
               ),
             ),
-
             const SizedBox(height: 6),
-
             Text(
               'Screening time: ${widget.movie.screeningTime}',
               style: const TextStyle(
@@ -88,9 +81,7 @@ class _MovieListingState extends State<MovieListing> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 6),
-
             Text(
               'Ticket price: ${widget.movie.formattedPrice}',
               style: const TextStyle(
@@ -98,18 +89,14 @@ class _MovieListingState extends State<MovieListing> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 16),
-
             Text(
               widget.movie.synopsis,
               style: const TextStyle(
                 color: cinemaFontWhite,
               ),
             ),
-
             const SizedBox(height: 24),
-
             DropdownMenu<int>(
               initialSelection: _ticketQuantity,
               label: const Text('Tickets'),
@@ -144,18 +131,14 @@ class _MovieListingState extends State<MovieListing> {
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
-
             Text(
               'Tickets selected: $_ticketQuantity',
               style: const TextStyle(
                 color: cinemaFontWhite,
               ),
             ),
-
             const SizedBox(height: 16),
-
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: cinemaBrand,
@@ -173,7 +156,6 @@ class _MovieListingState extends State<MovieListing> {
               },
               child: const Text('Add to order'),
             ),
-
             if (_bookingMessage.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
