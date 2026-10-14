@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:southsea_cinema/constants.dart';
-import 'package:southsea_cinema/widgets/nav_drawer.dart';
+import 'package:southsea_cinema/models/movie.dart';
 
 class MovieListing extends StatefulWidget {
-  const MovieListing({super.key});
+  final Movie movie;
+
+  const MovieListing({
+    super.key,
+    required this.movie,
+  });
 
   @override
   State<MovieListing> createState() => _MovieListingState();
@@ -17,41 +22,92 @@ class _MovieListingState extends State<MovieListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          appTitle,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: cinemaBrand,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          widget.movie.title,
           style: cinemaHeaderStyle,
         ),
         backgroundColor: cinemaSurface,
-        iconTheme: const IconThemeData(
-          color: cinemaBrand,
-        ),
         elevation: 0,
       ),
-      drawer: const NavDrawer(),
-      body: Container(
-        width: double.infinity,
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Interstellar',
-              style: TextStyle(
-                fontSize: 24,
+            Center(
+              child: Image.asset(
+                widget.movie.posterImagePath,
+                height: 240,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            Text(
+              widget.movie.title,
+              style: const TextStyle(
+                color: cinemaFontWhite,
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
 
-            const Text('Runtime: 169 minutes'),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
 
-            const Text('Age rating: 12A'),
+            Text(
+              'Age rating: ${widget.movie.ageRating}',
+              style: const TextStyle(
+                color: cinemaFontMuted,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            Text(
+              'Runtime: ${widget.movie.runtime}',
+              style: const TextStyle(
+                color: cinemaFontMuted,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            Text(
+              'Screening time: ${widget.movie.screeningTime}',
+              style: const TextStyle(
+                color: cinemaBrand,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            Text(
+              'Ticket price: £${widget.movie.ticketPrice.toStringAsFixed(2)}',
+              style: const TextStyle(
+                color: cinemaFontWhite,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
             const SizedBox(height: 16),
 
-            const Text(
-              'A team of explorers travels through space searching for a new home for humanity.',
+            Text(
+              widget.movie.synopsis,
+              style: const TextStyle(
+                color: cinemaFontWhite,
+              ),
             ),
+
             const SizedBox(height: 24),
 
             DropdownMenu<int>(
@@ -61,11 +117,8 @@ class _MovieListingState extends State<MovieListing> {
                 if (value != null) {
                   setState(() {
                     _ticketQuantity = value;
+                    _bookingMessage = '';
                   });
-
-                  print(
-                    'Tickets selected: $_ticketQuantity',
-                  );
                 }
               },
               dropdownMenuEntries: const [
@@ -92,27 +145,45 @@ class _MovieListingState extends State<MovieListing> {
               ],
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
             Text(
               'Tickets selected: $_ticketQuantity',
+              style: const TextStyle(
+                color: cinemaFontWhite,
+              ),
             ),
 
             const SizedBox(height: 16),
 
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: cinemaBrand,
+                foregroundColor: cinemaFontWhite,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+              ),
               onPressed: () {
                 setState(() {
                   _bookingMessage =
-                      'Added $_ticketQuantity tickets to the order';
+                      'Added $_ticketQuantity ticket${_ticketQuantity == 1 ? '' : 's'} '
+                      'for ${widget.movie.title} to the order';
                 });
               },
               child: const Text('Add to order'),
             ),
 
-            const SizedBox(height: 16),
-
-            Text(_bookingMessage),
+            if (_bookingMessage.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text(
+                _bookingMessage,
+                style: const TextStyle(
+                  color: cinemaBrand,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ],
         ),
       ),
