@@ -22,22 +22,14 @@ class _MovieListingState extends State<MovieListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: cinemaBrand,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          widget.movie.title,
-          style: cinemaHeaderStyle,
-        ),
-        backgroundColor: cinemaSurface,
-        elevation: 0,
-      ),
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  ),
+  title: Text(widget.movie.title),
+),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
