@@ -4,6 +4,7 @@ import 'package:southsea_cinema/models/movie.dart';
 import 'package:southsea_cinema/repositories/movie_repository.dart';
 import 'package:southsea_cinema/widgets/movie_card.dart';
 import 'package:southsea_cinema/widgets/nav_drawer.dart';
+import 'package:southsea_cinema/widgets/basket_button.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -16,6 +17,9 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
   title: const Text(appTitle),
+  actions: const [
+    BasketButton(),
+  ],
 ),
       drawer: const NavDrawer(),
       body: ListView.builder(

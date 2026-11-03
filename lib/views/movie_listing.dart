@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:southsea_cinema/constants.dart';
 import 'package:southsea_cinema/models/movie.dart';
 import 'package:southsea_cinema/widgets/primary_button.dart';
+import 'package:southsea_cinema/widgets/basket_button.dart';
 
 class MovieListing extends StatefulWidget {
   final Movie movie;
@@ -23,14 +24,17 @@ class _MovieListingState extends State<MovieListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  leading: IconButton(
-    icon: const Icon(Icons.arrow_back),
-    onPressed: () {
-      Navigator.pop(context);
-    },
-  ),
-  title: Text(widget.movie.title),
-),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(widget.movie.title),
+        actions: const [
+          BasketButton(),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
