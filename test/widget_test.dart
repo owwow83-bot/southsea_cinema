@@ -4,9 +4,12 @@ import 'package:southsea_cinema/main.dart';
 import 'package:southsea_cinema/views/home_view.dart';
 import 'package:southsea_cinema/views/movie_listing.dart';
 import 'package:southsea_cinema/widgets/movie_card.dart';
-
+import 'package:southsea_cinema/repositories/basket_repository.dart';
 void main() {
   group('Southsea Cinema home page widget tests', () {
+    setUp(() {
+  BasketRepository.instance.clear();
+});
     testWidgets(
       'SouthseaCinemaApp displays HomeView',
       (WidgetTester tester) async {
@@ -142,6 +145,17 @@ void main() {
         // Tap it.
         await tester.tap(addToOrderButton);
         await tester.pump();
+        expect(BasketRepository.instance.items.length, 1);
+
+        expect(
+          BasketRepository.instance.items.first.quantity,
+          1,
+        );
+
+        expect(
+          BasketRepository.instance.items.first.movie.id,
+          'interstellar',
+        );
 
         // Check the visible booking feedback.
         expect(
