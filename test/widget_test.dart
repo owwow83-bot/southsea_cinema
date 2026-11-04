@@ -1,15 +1,21 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:southsea_cinema/main.dart';
+import 'package:southsea_cinema/repositories/basket_repository.dart';
 import 'package:southsea_cinema/views/home_view.dart';
 import 'package:southsea_cinema/views/movie_listing.dart';
 import 'package:southsea_cinema/widgets/movie_card.dart';
-import 'package:southsea_cinema/repositories/basket_repository.dart';
+import 'package:southsea_cinema/widgets/primary_button.dart';
+
 void main() {
-  group('Southsea Cinema home page widget tests', () {
-    setUp(() {
-  BasketRepository.instance.clear();
-});
+  setUp(() {
+    rootBundle.clear();
+    BasketRepository.instance.clear();
+  });
+
+  group('Southsea Cinema widget tests', () {
     testWidgets(
       'SouthseaCinemaApp displays HomeView',
       (WidgetTester tester) async {
@@ -17,10 +23,9 @@ void main() {
           const SouthseaCinemaApp(),
         );
 
-        expect(
-          find.byType(HomeView),
-          findsOneWidget,
-        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(HomeView), findsOneWidget);
 
         expect(
           find.text('Southsea Cinema'),
@@ -30,16 +35,13 @@ void main() {
     );
 
     testWidgets(
-      'Home page displays movie cards and booking buttons',
+      'Home page loads movies from JSON',
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const SouthseaCinemaApp(),
         );
 
-        expect(
-          find.byType(MovieCard),
-          findsNWidgets(2),
-        );
+        await tester.pumpAndSettle();
 
         expect(
           find.text('Interstellar'),
@@ -47,13 +49,24 @@ void main() {
         );
 
         expect(
-          find.text('Inception'),
-          findsOneWidget,
+          find.byType(MovieCard),
+          findsWidgets,
         );
 
         expect(
           find.text('Book tickets'),
-          findsNWidgets(2),
+          findsWidgets,
+        );
+
+        // The second card may be below the test viewport.
+        await tester.scrollUntilVisible(
+          find.text('Inception'),
+          150,
+        );
+
+        expect(
+          find.text('Inception'),
+          findsOneWidget,
         );
       },
     );
@@ -64,6 +77,8 @@ void main() {
         await tester.pumpWidget(
           const SouthseaCinemaApp(),
         );
+
+        await tester.pumpAndSettle();
 
         await tester.tap(
           find.text('Book tickets').first,
@@ -110,7 +125,8 @@ void main() {
           const SouthseaCinemaApp(),
         );
 
-        // Navigate to the first movie.
+        await tester.pumpAndSettle();
+
         await tester.tap(
           find.text('Book tickets').first,
         );
@@ -118,37 +134,30 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.byType(MovieListing),
-          findsOneWidget,
-        );
-
-        expect(
           find.text('Tickets selected: 1'),
           findsOneWidget,
         );
 
-        // Locate the button itself.
-        final Finder addToOrderButton = find.widgetWithText(
-          ElevatedButton,
+        final Finder addButton = find.widgetWithText(
+          PrimaryButton,
           'Add to order',
         );
 
+        await tester.ensureVisible(addButton);
+        await tester.pumpAndSettle();
+
+        await tester.tap(addButton);
+        await tester.pump();
+
         expect(
-          addToOrderButton,
+          find.text(
+            'Added 1 ticket for Interstellar to the order',
+          ),
           findsOneWidget,
         );
 
-        // Scroll until the button is visible.
-        await tester.ensureVisible(addToOrderButton);
-        await tester.pumpAndSettle();
-
-        // Tap it.
-        await tester.tap(addToOrderButton);
-        await tester.pump();
-        expect(BasketRepository.instance.items.length, 1);
-
         expect(
-          BasketRepository.instance.items.first.quantity,
+          BasketRepository.instance.totalTickets,
           1,
         );
 
@@ -156,13 +165,30 @@ void main() {
           BasketRepository.instance.items.first.movie.id,
           'interstellar',
         );
+      },
+    );
 
-        // Check the visible booking feedback.
-        expect(
-          find.text(
-            'Added 1 ticket for Interstellar to the order',
+    testWidgets(
+      'Home shows an error if JSON cannot be loaded',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HomeView(
+              assetPath: 'assets/data/missing_movies.json',
+            ),
           ),
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(
+          find.textContaining('Could not load movies'),
           findsOneWidget,
+        );
+
+        expect(
+          find.byType(MovieCard),
+          findsNothing,
         );
       },
     );
