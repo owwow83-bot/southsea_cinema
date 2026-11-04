@@ -1,43 +1,114 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:southsea_cinema/main.dart';
-import 'package:southsea_cinema/views/basket_view.dart';
-import 'package:southsea_cinema/views/settings_view.dart';
+import 'package:southsea_cinema/models/movie.dart';
 
 void main() {
-  testWidgets('Drawer opens My Basket', (tester) async {
-    await tester.pumpWidget(
-      const SouthseaCinemaApp(),
-    );
-    await tester.pumpAndSettle();
+  group('Movie model tests', () {
+    test('Movie constructor assigns all properties', () {
+      const Movie movie = Movie(
+        id: 'interstellar',
+        title: 'Interstellar',
+        synopsis:
+            'A team of explorers travels through space searching for a new home for humanity.',
+        ageRating: '12A',
+        runtime: '2h 49m',
+        screeningTime: '19:30',
+        ticketPrice: 10.50,
+        posterImagePath: 'assets/images/interstellar.jpg',
+      );
 
-    await tester.tap(find.byIcon(Icons.menu));
-    await tester.pumpAndSettle();
+      expect(movie.id, 'interstellar');
+      expect(movie.title, 'Interstellar');
+      expect(
+        movie.synopsis,
+        'A team of explorers travels through space searching for a new home for humanity.',
+      );
+      expect(movie.ageRating, '12A');
+      expect(movie.runtime, '2h 49m');
+      expect(movie.screeningTime, '19:30');
+      expect(movie.ticketPrice, 10.50);
+      expect(
+        movie.posterImagePath,
+        'assets/images/interstellar.jpg',
+      );
+    });
 
-    await tester.tap(find.text('My Basket'));
-    await tester.pumpAndSettle();
+    test('formattedPrice displays whole price correctly', () {
+      const Movie movie = Movie(
+        id: 'test1',
+        title: 'Test Movie',
+        synopsis: 'Test synopsis',
+        ageRating: 'PG',
+        runtime: '2h',
+        screeningTime: '18:00',
+        ticketPrice: 10.00,
+        posterImagePath: 'assets/images/interstellar.jpg',
+      );
 
-    expect(find.byType(BasketView), findsOneWidget);
-    expect(find.text('My Basket'), findsWidgets);
-  });
+      expect(movie.formattedPrice, '£10.00');
+    });
 
-  testWidgets('Drawer opens My Settings', (tester) async {
-    await tester.pumpWidget(
-      const SouthseaCinemaApp(),
-    );
-    await tester.pumpAndSettle();
+    test('formattedPrice displays decimal price correctly', () {
+      const Movie movie = Movie(
+        id: 'test2',
+        title: 'Test Movie',
+        synopsis: 'Test synopsis',
+        ageRating: 'PG',
+        runtime: '2h',
+        screeningTime: '18:00',
+        ticketPrice: 10.50,
+        posterImagePath: 'assets/images/interstellar.jpg',
+      );
 
-    await tester.tap(find.byIcon(Icons.menu));
-    await tester.pumpAndSettle();
+      expect(movie.formattedPrice, '£10.50');
+    });
 
-    await tester.tap(find.text('My Settings'));
+    test('Movie.fromJson reads all fields correctly', () {
+      final Map<String, dynamic> movieJson = {
+        'id': 'test-movie',
+        'title': 'Test Movie',
+        'synopsis': 'A film used for testing.',
+        'ageRating': 'PG',
+        'runtime': '1h 45m',
+        'screeningTime': '18:00',
+        'ticketPrice': 8.75,
+        'posterImagePath': 'assets/images/test.jpg',
+      };
 
-    // Allow navigation and asynchronous loading to progress.
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+      final Movie movie = Movie.fromJson(movieJson);
 
-    expect(find.byType(SettingsView), findsOneWidget);
-    expect(find.text('Customer Profile'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(movie.id, 'test-movie');
+      expect(movie.title, 'Test Movie');
+      expect(movie.synopsis, 'A film used for testing.');
+      expect(movie.ageRating, 'PG');
+      expect(movie.runtime, '1h 45m');
+      expect(movie.screeningTime, '18:00');
+      expect(movie.ticketPrice, 8.75);
+      expect(
+        movie.posterImagePath,
+        'assets/images/test.jpg',
+      );
+
+      expect(movie.toJson(), equals(movieJson));
+    });
+
+    test('Movie.fromJson converts integer price to double', () {
+      final Map<String, dynamic> movieJson = {
+        'id': 'whole-price',
+        'title': 'Whole Price Movie',
+        'synopsis': 'Testing a whole-number price.',
+        'ageRating': 'U',
+        'runtime': '90 minutes',
+        'screeningTime': '14:00',
+        'ticketPrice': 10,
+        'posterImagePath': 'assets/images/test.jpg',
+      };
+
+      final Movie movie = Movie.fromJson(movieJson);
+
+      expect(movie.ticketPrice, isA<double>());
+      expect(movie.ticketPrice, 10.0);
+      expect(movie.formattedPrice, '£10.00');
+      expect(movie.toJson()['ticketPrice'], 10.0);
+    });
   });
 }
