@@ -11,12 +11,9 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final TextEditingController _nameController =
-      TextEditingController();
-  final TextEditingController _addressController =
-      TextEditingController();
-  final TextEditingController _emailController =
-      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   bool _receiveNewsletter = false;
   String _confirmationMessage = '';
@@ -38,8 +35,7 @@ class _SettingsViewState extends State<SettingsView> {
     );
 
     setState(() {
-      _confirmationMessage =
-          'Settings saved for ${settings.name}';
+      _confirmationMessage = 'Settings saved for ${settings.name}';
     });
   }
 
@@ -63,7 +59,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 20),
-
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -72,7 +67,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: _addressController,
               maxLines: 3,
@@ -82,7 +76,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -92,7 +85,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 16),
-
             SwitchListTile(
               title: const Text('Receive newsletter and offers'),
               value: _receiveNewsletter,
@@ -103,12 +95,10 @@ class _SettingsViewState extends State<SettingsView> {
               },
             ),
             const SizedBox(height: 20),
-
             PrimaryButton(
               label: 'Save Settings',
               onPressed: _saveSettings,
             ),
-
             if (_confirmationMessage.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(

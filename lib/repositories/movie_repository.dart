@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -54,19 +53,16 @@ class MovieRepository {
   Future<List<Movie>> loadMoviesFromAsset({
     String assetPath = 'assets/data/movies.json',
   }) async {
-    final String jsonString =
-        await rootBundle.loadString(assetPath);
+    final String jsonString = await rootBundle.loadString(assetPath);
 
     final dynamic decodedData = jsonDecode(jsonString);
 
-    final List<dynamic> jsonList =
-        decodedData as List<dynamic>;
+    final List<dynamic> jsonList = decodedData as List<dynamic>;
 
     final List<Movie> loadedMovies = <Movie>[];
 
     for (final dynamic item in jsonList) {
-      final Map<String, dynamic> movieMap =
-          item as Map<String, dynamic>;
+      final Map<String, dynamic> movieMap = item as Map<String, dynamic>;
 
       final Movie movie = Movie.fromJson(movieMap);
 

@@ -138,20 +138,20 @@ class _MovieListingState extends State<MovieListing> {
             ),
             const SizedBox(height: 16),
             PrimaryButton(
-            label: 'Add to order',
-            onPressed: () {
-              BasketRepository.instance.addTickets(
-                widget.movie,
-                _ticketQuantity,
-              );
+              label: 'Add to order',
+              onPressed: () {
+                BasketRepository.instance.addTickets(
+                  widget.movie,
+                  _ticketQuantity,
+                );
 
-              setState(() {
-                _bookingMessage =
-                    'Added $_ticketQuantity ticket${_ticketQuantity == 1 ? '' : 's'} '
-                    'for ${widget.movie.title} to the order';
-              });
-            },
-          ),
+                setState(() {
+                  _bookingMessage =
+                      'Added $_ticketQuantity ticket${_ticketQuantity == 1 ? '' : 's'} '
+                      'for ${widget.movie.title} to the order';
+                });
+              },
+            ),
             if (_bookingMessage.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(

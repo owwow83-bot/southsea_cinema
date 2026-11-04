@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:southsea_cinema/constants.dart';
 import 'package:southsea_cinema/models/movie.dart';
@@ -36,8 +35,7 @@ class _HomeViewState extends State<HomeView> {
     try {
       final MovieRepository repository = MovieRepository();
 
-      final List<Movie> loadedMovies =
-          await repository.loadMoviesFromAsset(
+      final List<Movie> loadedMovies = await repository.loadMoviesFromAsset(
         assetPath: widget.assetPath,
       );
 

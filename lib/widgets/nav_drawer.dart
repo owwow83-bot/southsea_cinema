@@ -36,17 +36,17 @@ class NavDrawer extends StatelessWidget {
               ),
             ),
             const DrawerTile(
-            title: 'Home',
-            route: '/',
-          ),
-          const DrawerTile(
-            title: 'My Basket',
-            route: '/basket',
-          ),
-          const DrawerTile(
-            title: 'My Settings',
-            route: '/settings',
-          ),
+              title: 'Home',
+              route: '/',
+            ),
+            const DrawerTile(
+              title: 'My Basket',
+              route: '/basket',
+            ),
+            const DrawerTile(
+              title: 'My Settings',
+              route: '/settings',
+            ),
           ],
         ),
       ),

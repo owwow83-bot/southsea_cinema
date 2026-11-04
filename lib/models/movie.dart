@@ -1,4 +1,3 @@
-
 class Movie {
   final String id;
   final String title;
@@ -20,8 +19,7 @@ class Movie {
     required this.posterImagePath,
   });
 
-  String get formattedPrice =>
-      '£${ticketPrice.toStringAsFixed(2)}';
+  String get formattedPrice => '£${ticketPrice.toStringAsFixed(2)}';
 
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(

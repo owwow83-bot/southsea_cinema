@@ -45,7 +45,6 @@ class _BasketViewState extends State<BasketView> {
                 ),
               ),
               const SizedBox(height: 16),
-
               for (final item in items)
                 Card(
                   color: cinemaSurface,
@@ -55,8 +54,7 @@ class _BasketViewState extends State<BasketView> {
                       children: [
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${item.quantity} x ${item.movie.title}',
@@ -74,6 +72,21 @@ class _BasketViewState extends State<BasketView> {
                             ],
                           ),
                         ),
+
+                        // Remove one ticket.
+                        IconButton(
+                          tooltip: 'Remove one ${item.movie.title} ticket',
+                          icon: const Icon(
+                            Icons.remove_circle_outline,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              basket.removeTickets(item.movie.id, 1);
+                            });
+                          },
+                        ),
+
+                        // Remove the entire movie selection.
                         IconButton(
                           tooltip: 'Remove ${item.movie.title}',
                           icon: const Icon(
@@ -90,9 +103,7 @@ class _BasketViewState extends State<BasketView> {
                     ),
                   ),
                 ),
-
               const SizedBox(height: 20),
-
               Text(
                 'Total tickets: ${basket.totalTickets}',
               ),
@@ -104,9 +115,7 @@ class _BasketViewState extends State<BasketView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(height: 20),
-
               PrimaryButton(
                 label: 'Checkout',
                 onPressed: () {
@@ -117,9 +126,7 @@ class _BasketViewState extends State<BasketView> {
                   });
                 },
               ),
-
               const SizedBox(height: 12),
-
               TextButton(
                 onPressed: () {
                   setState(() {

@@ -4,13 +4,11 @@ import 'package:southsea_cinema/models/movie.dart';
 class BasketRepository {
   BasketRepository._internal();
 
-  static final BasketRepository instance =
-      BasketRepository._internal();
+  static final BasketRepository instance = BasketRepository._internal();
 
   final List<BasketItem> _items = [];
 
-  List<BasketItem> get items =>
-      List<BasketItem>.unmodifiable(_items);
+  List<BasketItem> get items => List<BasketItem>.unmodifiable(_items);
 
   int get totalTickets {
     return _items.fold(
