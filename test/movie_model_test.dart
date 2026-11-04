@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:southsea_cinema/models/movie.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:southsea_cinema/models/movie.dart';
 
 void main() {
   group('Movie model tests', () {
@@ -62,5 +64,56 @@ void main() {
 
       expect(movie.formattedPrice, '£10.50');
     });
+
+
+test('Movie.fromJson reads every movie field', () {
+  final Map<String, dynamic> movieJson = {
+    'id': 'test-movie',
+    'title': 'Test Movie',
+    'synopsis': 'A film used for testing.',
+    'ageRating': 'PG',
+    'runtime': '1h 45m',
+    'screeningTime': '18:00',
+    'ticketPrice': 8.75,
+    'posterImagePath': 'assets/images/test.jpg',
+  };
+
+  final Movie movie = Movie.fromJson(movieJson);
+
+  expect(movie.id, 'test-movie');
+  expect(movie.title, 'Test Movie');
+  expect(movie.synopsis, 'A film used for testing.');
+  expect(movie.ageRating, 'PG');
+  expect(movie.runtime, '1h 45m');
+  expect(movie.screeningTime, '18:00');
+  expect(movie.ticketPrice, 8.75);
+  expect(
+    movie.posterImagePath,
+    'assets/images/test.jpg',
+  );
+
+  expect(movie.toJson(), equals(movieJson));
+});
+
+test('Movie.fromJson converts whole price to double', () {
+  final Map<String, dynamic> movieJson = {
+    'id': 'whole-price',
+    'title': 'Whole Price Movie',
+    'synopsis': 'Testing a whole-number price.',
+    'ageRating': 'U',
+    'runtime': '90 minutes',
+    'screeningTime': '14:00',
+    'ticketPrice': 10,
+    'posterImagePath': 'assets/images/test.jpg',
+  };
+
+  final Movie movie = Movie.fromJson(movieJson);
+
+  expect(movie.ticketPrice, isA<double>());
+  expect(movie.ticketPrice, 10.0);
+  expect(movie.formattedPrice, '£10.00');
+  expect(movie.toJson()['ticketPrice'], 10.0);
+});
+
   });
 }
