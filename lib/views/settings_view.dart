@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:southsea_cinema/models/user_settings.dart';
@@ -18,14 +17,11 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final TextEditingController _nameController =
-      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
-  final TextEditingController _addressController =
-      TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
-  final TextEditingController _emailController =
-      TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   bool _receiveNewsletter = false;
   bool _loading = true;
@@ -40,20 +36,15 @@ class _SettingsViewState extends State<SettingsView> {
 
   Future<void> _loadSettings() async {
     try {
-      final SharedPreferencesAsync prefs =
-          SharedPreferencesAsync();
+      final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
-      final String? savedName =
-          await prefs.getString(prefName);
+      final String? savedName = await prefs.getString(prefName);
 
-      final String? savedAddress =
-          await prefs.getString(prefAddress);
+      final String? savedAddress = await prefs.getString(prefAddress);
 
-      final String? savedEmail =
-          await prefs.getString(prefEmail);
+      final String? savedEmail = await prefs.getString(prefEmail);
 
-      final bool? savedNewsletter =
-          await prefs.getBool(prefNewsletter);
+      final bool? savedNewsletter = await prefs.getBool(prefNewsletter);
 
       if (!mounted) {
         return;
@@ -73,8 +64,7 @@ class _SettingsViewState extends State<SettingsView> {
 
       setState(() {
         _loading = false;
-        _confirmationMessage =
-            'Could not load settings: $error';
+        _confirmationMessage = 'Could not load settings: $error';
       });
     }
   }
@@ -93,8 +83,7 @@ class _SettingsViewState extends State<SettingsView> {
     );
 
     try {
-      final SharedPreferencesAsync prefs =
-          SharedPreferencesAsync();
+      final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
       await prefs.setString(prefName, settings.name);
 
@@ -115,8 +104,7 @@ class _SettingsViewState extends State<SettingsView> {
       }
 
       setState(() {
-        _confirmationMessage =
-            'Settings saved for ${settings.name}';
+        _confirmationMessage = 'Settings saved for ${settings.name}';
       });
     } catch (error) {
       if (!mounted) {
@@ -124,8 +112,7 @@ class _SettingsViewState extends State<SettingsView> {
       }
 
       setState(() {
-        _confirmationMessage =
-            'Could not save settings: $error';
+        _confirmationMessage = 'Could not save settings: $error';
       });
     }
   }
@@ -161,9 +148,7 @@ class _SettingsViewState extends State<SettingsView> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(
@@ -171,9 +156,7 @@ class _SettingsViewState extends State<SettingsView> {
                       labelText: 'Full name',
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   TextField(
                     controller: _addressController,
                     maxLines: 3,
@@ -182,9 +165,7 @@ class _SettingsViewState extends State<SettingsView> {
                       labelText: 'Address',
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -193,9 +174,7 @@ class _SettingsViewState extends State<SettingsView> {
                       labelText: 'Email address',
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
                   SwitchListTile(
                     title: const Text(
                       'Receive newsletter and offers',
@@ -207,14 +186,11 @@ class _SettingsViewState extends State<SettingsView> {
                       });
                     },
                   ),
-
                   const SizedBox(height: 20),
-
                   PrimaryButton(
                     label: 'Save Settings',
                     onPressed: _saveSettings,
                   ),
-
                   if (_confirmationMessage.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     Text(
