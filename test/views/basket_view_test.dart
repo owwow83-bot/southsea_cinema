@@ -217,4 +217,103 @@ void main() {
 
     expect(newerY, lessThan(olderY));
   });
+
+
+testWidgets(
+  'Removing middle movie keeps first and last',
+  (WidgetTester tester) async {
+    const Movie firstMovie = Movie(
+      id: 'interstellar',
+      title: 'Interstellar',
+      synopsis: 'Space exploration.',
+      ageRating: '12A',
+      runtime: '2h 49m',
+      screeningTime: '19:30',
+      ticketPrice: 10.50,
+      posterImagePath: 'assets/images/interstellar.jpg',
+    );
+
+    const Movie middleMovie = Movie(
+      id: 'inception',
+      title: 'Inception',
+      synopsis: 'Dream exploration.',
+      ageRating: '12A',
+      runtime: '2h 28m',
+      screeningTime: '21:00',
+      ticketPrice: 9.50,
+      posterImagePath: 'assets/images/inception.jpg',
+    );
+
+    const Movie lastMovie = Movie(
+      id: 'the-martian',
+      title: 'The Martian',
+      synopsis: 'An astronaut survives on Mars.',
+      ageRating: '12A',
+      runtime: '2h 24m',
+      screeningTime: '20:00',
+      ticketPrice: 11.00,
+      posterImagePath: 'assets/images/martian.jpg',
+    );
+
+    final BasketRepository basket =
+        BasketRepository.instance;
+
+    basket.addTickets(firstMovie, 1);
+    basket.addTickets(middleMovie, 2);
+    basket.addTickets(lastMovie, 1);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: BasketView(),
+      ),
+    );
+
+    expect(
+      find.text('1 x Interstellar'),
+      findsOneWidget,
+    );
+
+    expect(
+      find.text('2 x Inception'),
+      findsOneWidget,
+    );
+
+    expect(
+      find.text('1 x The Martian'),
+      findsOneWidget,
+    );
+
+    // Select the middle movie by its unique key.
+    final Finder middleDeleteButton =
+        find.byKey(const Key('remove-inception'));
+
+    await tester.ensureVisible(middleDeleteButton);
+    await tester.pump();
+
+    await tester.tap(middleDeleteButton);
+    await tester.pump();
+
+    // First and last must remain.
+    expect(
+      find.text('1 x Interstellar'),
+      findsOneWidget,
+    );
+
+    expect(
+      find.text('1 x The Martian'),
+      findsOneWidget,
+    );
+
+    // Middle movie must be removed.
+    expect(
+      find.text('2 x Inception'),
+      findsNothing,
+    );
+
+    expect(basket.items.length, 2);
+    expect(basket.totalTickets, 2);
+    expect(basket.total, 21.50);
+  },
+);
+
 }
