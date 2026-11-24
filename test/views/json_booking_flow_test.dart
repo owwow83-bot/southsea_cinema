@@ -31,7 +31,8 @@ void main() {
     final Database db = await databaseFactoryFfiNoIsolate.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
-        version: 1,
+        version: 2,
+        onConfigure: CinemaDatabase.instance.configureDatabase,
         onCreate: CinemaDatabase.instance.createTables,
       ),
     );

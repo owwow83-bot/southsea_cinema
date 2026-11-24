@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:southsea_cinema/controllers/cinema_theme_controller.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:southsea_cinema/views/settings_view.dart';
@@ -34,7 +35,7 @@ void main() {
 
       expect(
         find.byType(Switch),
-        findsOneWidget,
+        findsNWidgets(2),
       );
 
       expect(
@@ -43,6 +44,37 @@ void main() {
       );
     },
   );
+
+  testWidgets('Dark mode control saves the light appearance',
+      (WidgetTester tester) async {
+    final controller = CinemaThemeController();
+    await tester.runAsync(() => controller.load());
+
+    await tester.pumpWidget(
+      MaterialApp(home: SettingsView(themeController: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    final Finder darkMode = find.text('Dark mode');
+    await tester.ensureVisible(darkMode);
+    await tester.tap(darkMode);
+    await tester.pump();
+    await tester.runAsync(() async {
+      // Drain pending in-memory SharedPreferences writes.
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    });
+    await tester.pump();
+
+    expect(controller.isDark, isFalse);
+    expect(
+      await SharedPreferencesAsync().getString(
+        CinemaThemeController.preferenceKey,
+      ),
+      'light',
+    );
+    await tester.pumpWidget(const SizedBox.shrink());
+    controller.dispose();
+  });
 
   testWidgets(
     'Settings page loads previously saved profile',
@@ -81,7 +113,7 @@ void main() {
       );
 
       final Switch newsletterSwitch = tester.widget<Switch>(
-        find.byType(Switch),
+        find.byType(Switch).first,
       );
 
       expect(newsletterSwitch.value, isTrue);
@@ -122,7 +154,7 @@ void main() {
         'jamie@example.com',
       );
 
-      final Finder newsletterSwitch = find.byType(Switch);
+      final Finder newsletterSwitch = find.byType(Switch).first;
 
       await tester.ensureVisible(newsletterSwitch);
 
@@ -198,7 +230,7 @@ void main() {
       );
 
       final Switch reopenedSwitch = tester.widget<Switch>(
-        find.byType(Switch),
+        find.byType(Switch).first,
       );
 
       expect(reopenedSwitch.value, isTrue);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:southsea_cinema/constants.dart';
 import 'package:southsea_cinema/models/movie.dart';
 import 'package:southsea_cinema/widgets/primary_button.dart';
 import 'package:southsea_cinema/widgets/basket_button.dart';
@@ -23,6 +22,8 @@ class _MovieListingState extends State<MovieListing> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -51,8 +52,8 @@ class _MovieListingState extends State<MovieListing> {
             const SizedBox(height: 20),
             Text(
               widget.movie.title,
-              style: const TextStyle(
-                color: cinemaFontWhite,
+              style: TextStyle(
+                color: colors.onSurface,
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
               ),
@@ -60,38 +61,38 @@ class _MovieListingState extends State<MovieListing> {
             const SizedBox(height: 12),
             Text(
               'Age rating: ${widget.movie.ageRating}',
-              style: const TextStyle(
-                color: cinemaFontMuted,
+              style: TextStyle(
+                color: colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               'Runtime: ${widget.movie.runtime}',
-              style: const TextStyle(
-                color: cinemaFontMuted,
+              style: TextStyle(
+                color: colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               'Screening time: ${widget.movie.screeningTime}',
-              style: const TextStyle(
-                color: cinemaBrand,
+              style: TextStyle(
+                color: colors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               'Ticket price: ${widget.movie.formattedPrice}',
-              style: const TextStyle(
-                color: cinemaFontWhite,
+              style: TextStyle(
+                color: colors.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               widget.movie.synopsis,
-              style: const TextStyle(
-                color: cinemaFontWhite,
+              style: TextStyle(
+                color: colors.onSurface,
               ),
             ),
             const SizedBox(height: 24),
@@ -132,9 +133,25 @@ class _MovieListingState extends State<MovieListing> {
             const SizedBox(height: 10),
             Text(
               'Tickets selected: $_ticketQuantity',
-              style: const TextStyle(
-                color: cinemaFontWhite,
+              style: TextStyle(
+                color: colors.onSurface,
               ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Current subtotal for ${widget.movie.title}:',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '£${(widget.movie.ticketPrice * _ticketQuantity).toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             PrimaryButton(
@@ -156,8 +173,8 @@ class _MovieListingState extends State<MovieListing> {
               const SizedBox(height: 16),
               Text(
                 _bookingMessage,
-                style: const TextStyle(
-                  color: cinemaBrand,
+                style: TextStyle(
+                  color: colors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

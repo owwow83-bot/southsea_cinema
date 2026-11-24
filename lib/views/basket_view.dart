@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:southsea_cinema/constants.dart';
 import 'package:southsea_cinema/database/cinema_db.dart';
 import 'package:southsea_cinema/models/basket_item.dart';
 import 'package:southsea_cinema/models/booking.dart';
+import 'package:southsea_cinema/models/booking_item.dart';
 import 'package:southsea_cinema/repositories/basket_repository.dart';
 import 'package:southsea_cinema/widgets/nav_drawer.dart';
 import 'package:southsea_cinema/widgets/primary_button.dart';
@@ -17,6 +17,7 @@ class BasketView extends StatefulWidget {
 
 class _BasketViewState extends State<BasketView> {
   List<Booking> _bookings = [];
+  Map<int, List<BookingItem>> _itemsByBookingId = {};
 
   bool _loadingBookings = true;
   bool _saving = false;
@@ -32,19 +33,26 @@ class _BasketViewState extends State<BasketView> {
 
   Future<void> _loadBookings() async {
     try {
-      final List<Booking> bookings =
-          await CinemaDatabase.instance.getAllBookings();
+      final CinemaDatabase database = CinemaDatabase.instance;
+      final List<Booking> bookings = await database.getAllBookings();
+      final Map<int, List<BookingItem>> itemLines = {};
+
+      for (final Booking booking in bookings) {
+        if (booking.id != null) {
+          itemLines[booking.id!] =
+              await database.getItemsForBooking(booking.id!);
+        }
+      }
 
       if (!mounted) return;
-
       setState(() {
         _bookings = bookings;
+        _itemsByBookingId = itemLines;
         _historyError = '';
         _loadingBookings = false;
       });
     } catch (error) {
       if (!mounted) return;
-
       setState(() {
         _historyError = 'Could not load bookings: $error';
         _loadingBookings = false;
@@ -105,9 +113,18 @@ class _BasketViewState extends State<BasketView> {
         date: date,
       );
 
-      // Save successfully before clearing the basket.
-      await database.insertBooking(booking);
+      // Save a snapshot of each purchased movie together with the booking.
+      final List<BookingItem> bookingItems = selectedItems.map((item) {
+        return BookingItem(
+          movieId: item.movie.id,
+          movieTitle: item.movie.title,
+          unitPrice: item.movie.ticketPrice,
+          quantity: item.quantity,
+        );
+      }).toList();
 
+      // A failed transaction keeps the customer's basket unchanged.
+      await database.saveBookingWithItems(booking, bookingItems);
       basket.clear();
 
       if (!mounted) return;
@@ -132,7 +149,7 @@ class _BasketViewState extends State<BasketView> {
 
   Widget _buildBookingCard(Booking booking) {
     return Card(
-      color: cinemaSurface,
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -155,12 +172,24 @@ class _BasketViewState extends State<BasketView> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(booking.summary),
+            if ((_itemsByBookingId[booking.id] ?? []).isEmpty)
+              // Bookings saved before Worksheet 8 still have only a summary.
+              Text(booking.summary)
+            else
+              for (final BookingItem item in _itemsByBookingId[booking.id]!)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    '${item.quantity} x ${item.movieTitle} — '
+                    '£${item.unitPrice.toStringAsFixed(2)} each — '
+                    '£${item.lineTotal.toStringAsFixed(2)}',
+                  ),
+                ),
             const SizedBox(height: 4),
             Text(
               booking.date,
-              style: const TextStyle(
-                color: cinemaFontMuted,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),
@@ -225,7 +254,7 @@ class _BasketViewState extends State<BasketView> {
             else ...[
               for (final BasketItem item in items)
                 Card(
-                  color: cinemaSurface,
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Padding(
                     padding: const EdgeInsets.all(12),
