@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:southsea_cinema/database/cinema_db.dart';
 import 'package:southsea_cinema/models/booking.dart';
@@ -8,8 +7,7 @@ void main() {
   setUp(() async {
     sqfliteFfiInit();
 
-    final Database db =
-        await databaseFactoryFfiNoIsolate.openDatabase(
+    final Database db = await databaseFactoryFfiNoIsolate.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
         version: 1,
@@ -44,8 +42,7 @@ void main() {
       date: '20/11/2026 15:00',
     );
 
-    final int id =
-        await CinemaDatabase.instance.insertBooking(booking);
+    final int id = await CinemaDatabase.instance.insertBooking(booking);
 
     expect(id, greaterThan(0));
 

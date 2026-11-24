@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:southsea_cinema/database/cinema_db.dart';
@@ -25,8 +24,7 @@ void main() {
 
     sqfliteFfiInit();
 
-    final Database db =
-        await databaseFactoryFfiNoIsolate.openDatabase(
+    final Database db = await databaseFactoryFfiNoIsolate.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
         version: 1,
@@ -109,8 +107,7 @@ void main() {
 
     await tester.pump();
 
-    final List<Booking>? bookings =
-        await tester.runAsync(() async {
+    final List<Booking>? bookings = await tester.runAsync(() async {
       return CinemaDatabase.instance.getAllBookings();
     });
 
@@ -140,8 +137,7 @@ void main() {
 
     // Simulate a broken database by deleting its table.
     await tester.runAsync(() async {
-      final Database db =
-          await CinemaDatabase.instance.database;
+      final Database db = await CinemaDatabase.instance.database;
 
       await db.execute('DROP TABLE bookings');
     });
@@ -215,13 +211,9 @@ void main() {
       findsOneWidget,
     );
 
-    final double newerY = tester
-        .getTopLeft(find.text('Booking #1002'))
-        .dy;
+    final double newerY = tester.getTopLeft(find.text('Booking #1002')).dy;
 
-    final double olderY = tester
-        .getTopLeft(find.text('Booking #1001'))
-        .dy;
+    final double olderY = tester.getTopLeft(find.text('Booking #1001')).dy;
 
     expect(newerY, lessThan(olderY));
   });

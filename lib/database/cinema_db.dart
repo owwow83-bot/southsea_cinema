@@ -1,4 +1,3 @@
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:southsea_cinema/models/booking.dart';
@@ -6,8 +5,7 @@ import 'package:southsea_cinema/models/booking.dart';
 class CinemaDatabase {
   CinemaDatabase._internal();
 
-  static final CinemaDatabase instance =
-      CinemaDatabase._internal();
+  static final CinemaDatabase instance = CinemaDatabase._internal();
 
   static Database? _database;
 
@@ -96,22 +94,18 @@ class CinemaDatabase {
   Future<List<Booking>> getAllBookings() async {
     final Database db = await database;
 
-    final List<Map<String, Object?>> records =
-        await db.query(
+    final List<Map<String, Object?>> records = await db.query(
       'bookings',
       orderBy: 'booking_number DESC',
     );
 
-    return records
-        .map((row) => Booking.fromMap(row))
-        .toList();
+    return records.map((row) => Booking.fromMap(row)).toList();
   }
 
   Future<int> getNextBookingNumber() async {
     final Database db = await database;
 
-    final List<Map<String, Object?>> records =
-        await db.rawQuery(
+    final List<Map<String, Object?>> records = await db.rawQuery(
       'SELECT MAX(booking_number) AS max_num '
       'FROM bookings',
     );

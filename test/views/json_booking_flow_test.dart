@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:southsea_cinema/database/cinema_db.dart';
@@ -17,8 +16,7 @@ void main() {
   setUpAll(() async {
     final MovieRepository repository = MovieRepository();
 
-    final List<Movie> movies =
-        await repository.loadMoviesFromAsset();
+    final List<Movie> movies = await repository.loadMoviesFromAsset();
 
     jsonMovie = movies.firstWhere(
       (movie) => movie.id == 'interstellar',
@@ -30,8 +28,7 @@ void main() {
 
     sqfliteFfiInit();
 
-    final Database db =
-        await databaseFactoryFfiNoIsolate.openDatabase(
+    final Database db = await databaseFactoryFfiNoIsolate.openDatabase(
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
         version: 1,
@@ -47,8 +44,7 @@ void main() {
   });
 
   test('JSON movie works with basket calculations', () {
-    final BasketRepository basket =
-        BasketRepository.instance;
+    final BasketRepository basket = BasketRepository.instance;
 
     basket.addTickets(jsonMovie, 3);
 
@@ -64,8 +60,7 @@ void main() {
   testWidgets('JSON movie checkout saves booking', (
     tester,
   ) async {
-    final BasketRepository basket =
-        BasketRepository.instance;
+    final BasketRepository basket = BasketRepository.instance;
 
     basket.addTickets(jsonMovie, 2);
 
@@ -80,8 +75,7 @@ void main() {
 
     await tester.pump();
 
-    final List<Booking>? saved =
-        await tester.runAsync(() async {
+    final List<Booking>? saved = await tester.runAsync(() async {
       return CinemaDatabase.instance.getAllBookings();
     });
 

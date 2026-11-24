@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:southsea_cinema/constants.dart';
@@ -56,47 +55,38 @@ class _BasketViewState extends State<BasketView> {
   String _buildSummary(List<BasketItem> items) {
     return items
         .map(
-          (item) =>
-              '${item.quantity} x ${item.movie.title}',
+          (item) => '${item.quantity} x ${item.movie.title}',
         )
         .join(', ');
   }
 
   String _formatDate(DateTime date) {
-    final String day =
-        date.day.toString().padLeft(2, '0');
+    final String day = date.day.toString().padLeft(2, '0');
 
-    final String month =
-        date.month.toString().padLeft(2, '0');
+    final String month = date.month.toString().padLeft(2, '0');
 
-    final String hour =
-        date.hour.toString().padLeft(2, '0');
+    final String hour = date.hour.toString().padLeft(2, '0');
 
-    final String minute =
-        date.minute.toString().padLeft(2, '0');
+    final String minute = date.minute.toString().padLeft(2, '0');
 
     return '$day/$month/${date.year} $hour:$minute';
   }
 
   Future<void> _checkout() async {
-    final BasketRepository basket =
-        BasketRepository.instance;
+    final BasketRepository basket = BasketRepository.instance;
 
     if (_saving || basket.items.isEmpty) {
       return;
     }
 
     // Take a snapshot of the items before saving.
-    final List<BasketItem> selectedItems =
-        List<BasketItem>.from(basket.items);
+    final List<BasketItem> selectedItems = List<BasketItem>.from(basket.items);
 
-    final String summary =
-        _buildSummary(selectedItems);
+    final String summary = _buildSummary(selectedItems);
 
     final double total = basket.total;
 
-    final String date =
-        _formatDate(DateTime.now());
+    final String date = _formatDate(DateTime.now());
 
     setState(() {
       _saving = true;
@@ -104,11 +94,9 @@ class _BasketViewState extends State<BasketView> {
     });
 
     try {
-      final CinemaDatabase database =
-          CinemaDatabase.instance;
+      final CinemaDatabase database = CinemaDatabase.instance;
 
-      final int bookingNumber =
-          await database.getNextBookingNumber();
+      final int bookingNumber = await database.getNextBookingNumber();
 
       final Booking booking = Booking(
         bookingNumber: bookingNumber,
@@ -126,8 +114,7 @@ class _BasketViewState extends State<BasketView> {
 
       setState(() {
         _saving = false;
-        _confirmationMessage =
-            'Booking #$bookingNumber saved successfully';
+        _confirmationMessage = 'Booking #$bookingNumber saved successfully';
       });
 
       // Reload history so the new booking appears.
@@ -138,8 +125,7 @@ class _BasketViewState extends State<BasketView> {
 
       setState(() {
         _saving = false;
-        _confirmationMessage =
-            'Could not save booking: $error';
+        _confirmationMessage = 'Could not save booking: $error';
       });
     }
   }
@@ -201,16 +187,14 @@ class _BasketViewState extends State<BasketView> {
 
     return Column(
       children: [
-        for (final Booking booking in _bookings)
-          _buildBookingCard(booking),
+        for (final Booking booking in _bookings) _buildBookingCard(booking),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final BasketRepository basket =
-        BasketRepository.instance;
+    final BasketRepository basket = BasketRepository.instance;
 
     final List<BasketItem> items = basket.items;
 
@@ -231,9 +215,7 @@ class _BasketViewState extends State<BasketView> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 16),
-
             if (items.isEmpty)
               Text(
                 _confirmationMessage.isEmpty
@@ -251,8 +233,7 @@ class _BasketViewState extends State<BasketView> {
                       children: [
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${item.quantity} x ${item.movie.title}',
@@ -270,13 +251,11 @@ class _BasketViewState extends State<BasketView> {
                             ],
                           ),
                         ),
-
                         IconButton(
                           key: Key(
                             'remove-one-${item.movie.id}',
                           ),
-                          tooltip:
-                              'Remove one ${item.movie.title} ticket',
+                          tooltip: 'Remove one ${item.movie.title} ticket',
                           icon: const Icon(
                             Icons.remove_circle_outline,
                           ),
@@ -291,13 +270,11 @@ class _BasketViewState extends State<BasketView> {
                                   });
                                 },
                         ),
-
                         IconButton(
                           key: Key(
                             'remove-${item.movie.id}',
                           ),
-                          tooltip:
-                              'Remove ${item.movie.title}',
+                          tooltip: 'Remove ${item.movie.title}',
                           icon: const Icon(
                             Icons.delete_outline,
                             color: Colors.redAccent,
@@ -316,15 +293,11 @@ class _BasketViewState extends State<BasketView> {
                     ),
                   ),
                 ),
-
               const SizedBox(height: 12),
-
               Text(
                 'Total tickets: ${basket.totalTickets}',
               ),
-
               const SizedBox(height: 8),
-
               Text(
                 'Total: £${basket.total.toStringAsFixed(2)}',
                 style: const TextStyle(
@@ -332,9 +305,7 @@ class _BasketViewState extends State<BasketView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(height: 18),
-
               PrimaryButton(
                 label: _saving ? 'Saving...' : 'Checkout',
                 onPressed: () {
@@ -343,9 +314,7 @@ class _BasketViewState extends State<BasketView> {
                   }
                 },
               ),
-
               const SizedBox(height: 10),
-
               TextButton(
                 onPressed: _saving
                     ? null
@@ -358,19 +327,13 @@ class _BasketViewState extends State<BasketView> {
                 child: const Text('Clear basket'),
               ),
             ],
-
-            if (_confirmationMessage.isNotEmpty &&
-                items.isNotEmpty) ...[
+            if (_confirmationMessage.isNotEmpty && items.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(_confirmationMessage),
             ],
-
             const SizedBox(height: 28),
-
             const Divider(),
-
             const SizedBox(height: 12),
-
             const Text(
               'Past Bookings',
               style: TextStyle(
@@ -378,9 +341,7 @@ class _BasketViewState extends State<BasketView> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
-
             _buildBookingHistory(),
           ],
         ),

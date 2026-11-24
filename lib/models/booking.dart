@@ -1,4 +1,3 @@
-
 class Booking {
   final int? id;
   final int bookingNumber;
