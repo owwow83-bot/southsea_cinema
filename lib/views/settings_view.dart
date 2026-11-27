@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:southsea_cinema/controllers/cinema_theme_controller.dart';
 import 'package:southsea_cinema/models/user_settings.dart';
 import 'package:southsea_cinema/widgets/nav_drawer.dart';
 import 'package:southsea_cinema/widgets/primary_button.dart';
@@ -11,9 +10,7 @@ const String prefEmail = 'user_email';
 const String prefNewsletter = 'user_newsletter';
 
 class SettingsView extends StatefulWidget {
-  const SettingsView({super.key, this.themeController});
-
-  final CinemaThemeController? themeController;
+  const SettingsView({super.key});
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -120,42 +117,6 @@ class _SettingsViewState extends State<SettingsView> {
     }
   }
 
-  Widget _buildThemeSetting() {
-    final CinemaThemeController controller =
-        widget.themeController ?? CinemaThemeController.instance;
-
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        return SwitchListTile(
-          title: const Text('Dark mode'),
-          subtitle: Text(
-            controller.isDark
-                ? 'Dark appearance is enabled'
-                : 'Light appearance is enabled',
-          ),
-          secondary: Icon(
-            controller.isDark ? Icons.dark_mode : Icons.light_mode,
-          ),
-          value: controller.isDark,
-          onChanged: (bool enabled) async {
-            try {
-              await controller.setDarkMode(enabled);
-            } catch (error) {
-              // The builder's context, not just the State, must be mounted.
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Could not save theme preference: $error'),
-                ),
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     _nameController.dispose();
@@ -225,8 +186,6 @@ class _SettingsViewState extends State<SettingsView> {
                       });
                     },
                   ),
-                  const Divider(),
-                  _buildThemeSetting(),
                   const SizedBox(height: 20),
                   PrimaryButton(
                     label: 'Save Settings',
